@@ -11,8 +11,8 @@ import Projeto.Janela;
 public class BrincadeiraDeCriancas {
     private static final int NUM_CRIANCAS = 10;
     private static final int CAPACIDADE_CESTO = 6;
-    private static Semaphore semaforoCesto = new Semaphore(CAPACIDADE_CESTO);
-    private static Semaphore semaforoJogando = new Semaphore(0); // quantidade de bolas inicial
+    private static Semaphore semaforoCestoCheio = new Semaphore(CAPACIDADE_CESTO); // capacidade do cesto
+    private static Semaphore semaforoCestoVazio = new Semaphore(0); // quantidade de bolas inicial
     
     
     public static void adicionarCrianca(String id, boolean comecaComBola) {
@@ -64,30 +64,31 @@ public class BrincadeiraDeCriancas {
         public void run() {
             try {
                 while (true) {
-                    if (!comBola) {
-                        semaforoCesto.acquire();
-                        comBola = true;  
-                        Janela.campoLogs.append("Crian�a " + id + " tentou pegar uma bola"  + "\n");
-                        System.out.println("Crian�a " + id + " tentou pegar uma bola");
+                    if (comBola) {
+                        Janela.campoLogs.append("Crian�a " + id + " começou com bola e está brincando"  + "\n");
+                        System.out.println("Crian�a " + id + " começou com bola e está brincando");
+                        comBola = true;            
+                        
                     }else{
-                        semaforoJogando.release();
-                        semaforoCesto.acquire();
-                        comBola = true;  
                         Janela.campoLogs.append("Crian�a " + id + " tentou pegar uma bola"  + "\n");
                         System.out.println("Crian�a " + id + " tentou pegar uma bola");
-                    }
-                    semaforoJogando.acquire();                    
-                    System.out.println("Crian�a " + id + " pegou uma bola e est� brincando");
-                    Janela.campoLogs.append("Crian�a " + id + " pegou uma bola e est� brincando"+ "\n");
+                        semaforoCestoVazio.acquire();
+                        comBola = true; 
+                        Janela.campoLogs.append("Crian�a " + id + " pegou uma bola do cesto e est� brincando"  + "\n");
+                        System.out.println("Crian�a " + id + " pegou uma bola do cesto e est� brincando");                                     
+                    }                    
                     Espera(tempoBrincando);
+                    System.out.println("Crian�a " + id + " tentou colocar a bola no cesto");
+                    Janela.campoLogs.append("Crian�a " + id + " tentou colocar a bola no cesto"+ "\n");
+                    semaforoCestoCheio.acquire();
+                    semaforoCestoVazio.release();
                     System.out.println("Crian�a " + id + " colocou a bola no cesto");
                     Janela.campoLogs.append("Crian�a " + id + " colocou a bola no cesto"+ "\n");
-                    semaforoJogando.release();
                     comBola = false;
-                    semaforoCesto.release();
+                    
 
-                    System.out.println("Crian�a " + id + " est� em outra atividade");
-                    Janela.campoLogs.append("Crian�a " + id + " est� em outra atividade"+ "\n");
+                    System.out.println("Criança " + id + " esta em outra atividade");
+                    Janela.campoLogs.append("Criança " + id + " esta em outra atividade"+ "\n");
                     Espera(tempoOutraAtividade);
                 }
             } catch (InterruptedException e) {

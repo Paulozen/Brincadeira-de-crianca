@@ -23,45 +23,41 @@ public class Janela extends JFrame {
     private JLabel labelCrianca2;
     private boolean movimentaCrianca1;
     private boolean movimentaCrianca2;   
+    private Timer timer;
+    private int x, y;
+    JPanel painelCrianca = new JPanel();
+    
     
     public static JTextArea campoLogs = new JTextArea();
     JScrollPane scrollPane = new JScrollPane(campoLogs);
+
+
+   
    
     
     
     public Janela() {
+        
         // Define o t�tulo da janela
         setTitle("Brincadeira de criança");
 
         // Define o tamanho da janela
-        setSize(800, 600);
+        setSize(1920, 1080);
 
         // Define a opera��o padr�o ao fechar a janela
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Cria um painel para a imagem de fundo e as imagens das crian�as
-        JPanel painelImagem = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                ImageIcon fundo = new ImageIcon(getClass().getResource("/resources/fundo.png"));
-                g.drawImage(fundo.getImage(), 0, 0, getWidth(), getHeight(), this);
-                if (imagemCrianca1 != null) {
-                    labelCrianca1.setIcon(imagemCrianca1);
-                }
-                if (imagemCrianca2 != null) {
-                    labelCrianca2.setIcon(imagemCrianca2);
-                }
-            }
-        };
+        
+        
+
+        
+
+        
 
         // Adiciona as imagens das crian�as ao painel
-        imagemCrianca1 = new ImageIcon("crianca1.jpg");
-        imagemCrianca2 = new ImageIcon("crianca2.jpg");
-        labelCrianca1 = new JLabel(imagemCrianca1);
-        labelCrianca2 = new JLabel(imagemCrianca2);
-        painelImagem.add(labelCrianca1);
-        painelImagem.add(labelCrianca2);
+        // imagemCrianca1 = new ImageIcon(getClass().getResource("/resources/crianca.jpg"));
+        // labelCrianca1 = new JLabel(imagemCrianca1);
+        // painelImagem.add(labelCrianca1);
 
         // Cria um painel para a configura��o e exibi��o de logs
         JPanel painelConfiguracao = new JPanel(new GridLayout(3, 2));
@@ -82,7 +78,16 @@ public class Janela extends JFrame {
         
         scrollPane.setPreferredSize(new Dimension(200, 200));
         
-    
+         // Cria um painel para a imagem de fundo e as imagens das crian�as
+    JPanel painelImagem = new JPanel() {
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            ImageIcon fundo = new ImageIcon(getClass().getResource("/resources/fundo.png"));
+            g.drawImage(fundo.getImage(), 0, 0, getWidth(), getHeight(), this);
+           
+        }
+    };
                 
         
 
@@ -97,6 +102,7 @@ public class Janela extends JFrame {
                 botaoAdicionar.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
+                        AdicionarPainelCrianca();
                         String nome = campoNome.getText();
                         boolean comecaComBola = checkBoxBola.isSelected();
                        // Janela.campoLogs.append("TESTE SE ESTA COM BOLA" + comecaComBola);
@@ -105,6 +111,24 @@ public class Janela extends JFrame {
                 });
         painelPrincipal.add(scrollPane, BorderLayout.SOUTH);
 
+        imagemCrianca1 = new ImageIcon(getClass().getResource("/resources/crianca.jpg"));
+        JLabel labelCima = new JLabel(imagemCrianca1);
+        painelCrianca = new JPanel(new BorderLayout());
+        painelCrianca.setOpaque(false); // torna o painel transparente
+        painelCrianca.add(labelCima);
+        painelImagem.add(painelCrianca, BorderLayout.CENTER);
+        
+
+        timer = new Timer(10, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Atualiza as coordenadas da imagem de cima
+                x += 4; // atualiza a coordenada x (pode ser alterado para o valor desejado)
+                
+                painelCrianca.setLocation(x, y); // define a nova posição da imagem de cima
+            }
+        });
+        timer.start(); // inicia o timer para começar a movimentação
        
         // Adiciona o painel principal � janela
         getContentPane().add(painelPrincipal);
@@ -112,12 +136,19 @@ public class Janela extends JFrame {
         // Exibe a janela
         setVisible(true);
     }
-    
+
+
+    public void AdicionarPainelCrianca(){
+        Janela.campoLogs.append("DEBUG");
+        
+
+    }
     
   
 
 
     public static void main(String[] args) {
+       
         new Janela();
     }}
 
