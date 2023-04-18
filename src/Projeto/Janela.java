@@ -119,7 +119,7 @@ public class Janela extends JFrame {
     
 
         // Cria um painel para a configura��o e exibi��o de logs
-        JPanel painelConfiguracao = new JPanel(new GridLayout(3, 2));
+        JPanel painelConfiguracao = new JPanel(new GridLayout(20, 2));
         painelConfiguracao.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // Cria campos de texto e bot�o para a configura��o
@@ -127,7 +127,6 @@ public class Janela extends JFrame {
         JTextField TempoBrincando = new JTextField();
         JTextField TempoOutraAtividade = new JTextField();
         JCheckBox checkBoxBola = new JCheckBox("Crian�a come�a com bola?");
-
         // Adiciona os componentes ao painel de configura��o
         painelConfiguracao.add(new JLabel("ID da crian�a:"));
         painelConfiguracao.add(campoNome);

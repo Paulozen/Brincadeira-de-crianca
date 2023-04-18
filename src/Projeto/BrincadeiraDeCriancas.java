@@ -10,7 +10,7 @@ import Projeto.Janela;
 
 public class BrincadeiraDeCriancas {
     private static final int NUM_CRIANCAS = 10;
-    private static final int CAPACIDADE_CESTO = 6;
+    private static final int CAPACIDADE_CESTO = 10;
     private static Semaphore semaforoCestoCheio = new Semaphore(CAPACIDADE_CESTO); // capacidade do cesto
     private static Semaphore semaforoCestoVazio = new Semaphore(0); // quantidade de bolas inicial
     
@@ -73,6 +73,7 @@ public class BrincadeiraDeCriancas {
                         Janela.campoLogs.append("Crian�a " + id + " tentou pegar uma bola"  + "\n");
                         System.out.println("Crian�a " + id + " tentou pegar uma bola");
                         semaforoCestoVazio.acquire();
+                        semaforoCestoCheio.release();
                         comBola = true; 
                         Janela.campoLogs.append("Crian�a " + id + " pegou uma bola do cesto e est� brincando"  + "\n");
                         System.out.println("Crian�a " + id + " pegou uma bola do cesto e est� brincando");                                     
