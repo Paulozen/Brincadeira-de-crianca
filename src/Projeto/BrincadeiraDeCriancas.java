@@ -15,11 +15,11 @@ public class BrincadeiraDeCriancas {
     private static Semaphore semaforoCestoVazio = new Semaphore(0); // quantidade de bolas inicial
     
     
-    public static void adicionarCrianca(String id, boolean comecaComBola) {
+    public static void adicionarCrianca(String id, boolean comecaComBola, Integer tempoBrincando, Integer tempoOutraAtividad) {
     	
     	  int numeroInt = Integer.parseInt(id);
     	
-    	  Crianca crianca = new Crianca(numeroInt,comecaComBola,10,10);
+    	  Crianca crianca = new Crianca(numeroInt,comecaComBola,tempoBrincando,tempoOutraAtividad);
           crianca.start();
     	
     	
