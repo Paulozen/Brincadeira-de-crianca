@@ -1,45 +1,49 @@
 package Projeto;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.Semaphore;
-import Projeto.Janela;
+
+
 import javax.swing.*;
 
 
 public class BrincadeiraDeCriancas {
-    private static final int NUM_CRIANCAS = 10;
+    private static Set<Integer> listaDeId = new HashSet<Integer>();
+    private static int capacidadeCesto = 0;
+    private static int quantidadeBolas = 0;
     private static Semaphore semaforoCestoCheio = new Semaphore(0); // capacidade do cesto
     private static Semaphore semaforoCestoVazio = new Semaphore(0); // quantidade de bolas inicial
-    //static ImageIcon imagemCriancaVazio = new ImageIcon(getClass().getResource("/resources/vazio.png"));
-    //static ImageIcon imagemCrianca2 = new ImageIcon(getClass().getResource("/resources/fundo.png"));
+    
 
-    
-    
+
     public static void adicionarCrianca(String id, boolean comecaComBola, Integer tempoBrincando, Integer tempoOutraAtividad) {
-    	
-    	  int numeroInt = Integer.parseInt(id);
-          //System.out.println("criança 1:" + id + comecaComBola + tempoBrincando + tempoOutraAtividad);
-    	  Crianca crianca = new Crianca(numeroInt,comecaComBola,tempoBrincando,tempoOutraAtividad);
-          crianca.start();
-    	
-    	
-       
+
+        int numeroInt = Integer.parseInt(id);
+
+        if(listaDeId.contains(numeroInt)){
+            JOptionPane.showMessageDialog(null, "Já existe uma criança com esse id!", "Mensagem de Informação", JOptionPane.INFORMATION_MESSAGE);
+            throw new IllegalArgumentException("Já existe uma criança com esse id.");
+
+        }else{
+            listaDeId.add(numeroInt);
+           
+            Crianca crianca = new Crianca(numeroInt,comecaComBola,tempoBrincando,tempoOutraAtividad);
+            if(crianca.comBola){
+                quantidadeBolas++;
+            }
+            crianca.start();
+        }
+
     }
 
     static void definirSemaforoCesto(int i){
        semaforoCestoCheio.release(i);
+        capacidadeCesto = i;
        Janela.LabelCapacidadeCesto.setIcon(Janela.imagemCapacidadeCesto[i-1]);
     }
-//
-//    public static void main(String[] args) {
-//        for (int i = 1; i <= NUM_CRIANCAS; i++) {
-//            Crianca crianca = new Crianca(i,false,10,10);
-//            crianca.start();
-//        }
-//    }
+
     
     public static void Espera(int tempo,int opcao,int id) {
     	LocalDateTime inicio = LocalDateTime.now(); 
@@ -59,9 +63,14 @@ public class BrincadeiraDeCriancas {
     	
     }
     public static void AdicionarBola() {
-        semaforoCestoVazio.release();
-        Janela.LabelQuantidadeAtual.setIcon(Janela.imagemQuantidadeAtual[semaforoCestoVazio.availablePermits()]);
-    	
+        if(quantidadeBolas < capacidadeCesto){
+            quantidadeBolas++;
+            semaforoCestoVazio.release();
+            Janela.LabelQuantidadeAtual.setIcon(Janela.imagemQuantidadeAtual[semaforoCestoVazio.availablePermits()]);
+        }else {
+            JOptionPane.showMessageDialog(null, "Não é possivél adicionar mais bolas!", "Mensagem de Informação", JOptionPane.INFORMATION_MESSAGE);
+            throw new IllegalArgumentException("Não é possivél adicionar mais bolas!");
+        }
     }
 
     

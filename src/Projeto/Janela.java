@@ -2,24 +2,14 @@ package Projeto;
 import javax.swing.*;
 
 
-import Projeto.BrincadeiraDeCriancas;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.Vector;
-import java.util.concurrent.Semaphore;
 
 
 
 public class Janela extends JFrame {
 
-    private ImageIcon imagemCrianca1;
     static public ImageIcon imagemCriancaVazio;
     static public ImageIcon imagemCrianca2;
     static public ImageIcon imagemCriancaBrincando1;
@@ -30,12 +20,7 @@ public class Janela extends JFrame {
     static public ImageIcon imagemCesto;
     static public ImageIcon[] imagemCapacidadeCesto = new ImageIcon[10];
     static public ImageIcon[] imagemQuantidadeAtual = new ImageIcon[11];
-    private JLabel labelCrianca1;
-    private JLabel labelCrianca2;
-    private boolean movimentaCrianca1;
-    private boolean movimentaCrianca2;   
-    private Timer timer;
-    private int x, y;
+    
 
     public static JLabel[] LabelCrianca = new JLabel[10];
     public static JLabel LabelCapacidadeCesto = new JLabel();
@@ -82,58 +67,9 @@ public class Janela extends JFrame {
         
 
         
-        //Cria painel de configuração inicial
-       
-        JPanel painelConfiguracaoInicial = new JPanel(new GridLayout(2,10 ));
-        painelConfiguracaoInicial.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        
-        //Criar campos para config inicial
-        JTextField campoQuantidadeInicial = new JTextField();
-        JTextField campoComecaComBola = new JTextField();
-        JTextField campoTempoBrincando = new JTextField();
-        JTextField campoTempoOutraAtividade = new JTextField();
-
-        //Adiciona os campos criados ao painel        
-        painelConfiguracaoInicial.add(new JLabel("Quantas crianças começam? (EX: 5)"));
-        painelConfiguracaoInicial.add(campoQuantidadeInicial);
-        painelConfiguracaoInicial.add(new JLabel("Quais crianças começam com bola? (EX: 1,3)"));
-        painelConfiguracaoInicial.add(campoComecaComBola);
-        painelConfiguracaoInicial.add(new JLabel("Quanto tempo cada criança ficará brincando? (EX: 5,5,6,7,8)"));
-        painelConfiguracaoInicial.add(campoTempoBrincando);
-        painelConfiguracaoInicial.add(new JLabel("Quanto tempo cada criança ficará em outra tividade? (EX: 5,5,6,7,8)"));
-        painelConfiguracaoInicial.add(campoTempoOutraAtividade);
-        JButton botaoIniciar = new JButton("Iniciar");
-        painelConfiguracaoInicial.add(botaoIniciar);        
-                // Define o comportamento do botão iniciar
-                botaoIniciar.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-
-                        Integer QuantidadeInicial = Integer.parseInt(campoQuantidadeInicial.getText());
-                        String ComecaComBola = campoComecaComBola.getText();
-                        int[] intComecaComBola = separarVirgula(ComecaComBola);
-                        String TempoBrincando = campoTempoBrincando.getText();
-                        int[] intTempoBrincando = separarVirgula(TempoBrincando);
-                        String TempoOutraAtividade = campoTempoOutraAtividade.getText();
-                        int[] intTempoOutraAtividade = separarVirgula(TempoOutraAtividade);
-
-                        for(Integer i = 0; i < QuantidadeInicial; i++){
-                            boolean boolComecaComBola = false;
-                            String id = Integer.toString(i+1);
-                            for(Integer j = 0; j<intComecaComBola.length;j++){
-                                if(intComecaComBola[j] == j+1){
-                                    boolComecaComBola = true;
-                                    break;
-                                }
-                            }
-                            BrincadeiraDeCriancas.adicionarCrianca(id,boolComecaComBola,intTempoBrincando[i],intTempoOutraAtividade[i]);
-
-
-                        }
-                    }
-                });
         
        
+        
     
 
         // Cria um painel para a configura��o e exibi��o de logs
@@ -160,28 +96,17 @@ public class Janela extends JFrame {
         
         scrollPane.setPreferredSize(new Dimension(300, 100));
         
-         // Cria um painel para a imagem de fundo e as imagens das crian�as
-    // JPanel painelImagem = new JPanel() {
-    //     @Override
-    //     protected void paintComponent(Graphics g) {
-    //         super.paintComponent(g);
-    //         ImageIcon fundo = new ImageIcon(getClass().getResource("/resources/fundo.png"));
-    //         g.drawImage(fundo.getImage(), 0, 0, getWidth(), getHeight(), this);
-           
-    //     }
-    // };
+    
 
-    JPanel painelImagem = new JPanel(new GridLayout(2, 6));
+        JPanel painelImagem = new JPanel(new GridLayout(2, 6));
                 
         
 
         // Adiciona os pain�is ao painel principal
         JPanel painelPrincipal = new JPanel(new BorderLayout());
-        //painelPrincipal.add(painelConfiguracaoInicial, BorderLayout.NORTH);
         painelPrincipal.add(painelImagem, BorderLayout.CENTER);
         painelPrincipal.add(painelConfiguracao, BorderLayout.EAST);
         imagemCriancaVazio = new ImageIcon(getClass().getResource("/resources/vazio.png"));
-        //JLabel LabelCrianca1 = new JLabel(imagemCriancaVazio);
         imagemCrianca2 = new ImageIcon(getClass().getResource("/resources/fundo.png"));
         imagemCriancaBrincando1 = new ImageIcon(getClass().getResource("/resources/crianca_brincando_1.png"));
         imagemCriancaBrincando2 = new ImageIcon(getClass().getResource("/resources/crianca_brincando_2.png"));
@@ -223,14 +148,13 @@ public class Janela extends JFrame {
                 // Define o comportamento do bot�o de adicionar crian�a
                 botaoAdicionar.addActionListener(new ActionListener() {
                     @Override
-                    public void actionPerformed(ActionEvent e) {
-                        AdicionarPainelCrianca();
-                        //LabelCrianca[0].setIcon(imagemCrianca2);
+                    public void actionPerformed(ActionEvent e) {                       
+                        
                         String nome = campoNome.getText();
                         Integer intTempoBrincando = Integer.parseInt(TempoBrincando.getText());
                         Integer intTempoOutraAtividade = Integer.parseInt(TempoOutraAtividade.getText());
                         boolean comecaComBola = checkBoxBola.isSelected();
-                       // Janela.campoLogs.append("TESTE SE ESTA COM BOLA" + comecaComBola);
+                       
                         BrincadeiraDeCriancas.adicionarCrianca(nome, comecaComBola,intTempoBrincando,intTempoOutraAtividade);
                         
                     }
@@ -258,16 +182,7 @@ public class Janela extends JFrame {
         
         
 
-        // timer = new Timer(10, new ActionListener() {
-        //     @Override
-        //     public void actionPerformed(ActionEvent e) {
-        //         // Atualiza as coordenadas da imagem de cima
-        //         x += 4; // atualiza a coordenada x (pode ser alterado para o valor desejado)
-                
-        //         painelCrianca.setLocation(x, y); // define a nova posição da imagem de cima
-        //     }
-        // });
-        //timer.start(); // inicia o timer para começar a movimentação
+       
        
         // Adiciona o painel principal � janela
         getContentPane().add(painelPrincipal);
@@ -275,6 +190,10 @@ public class Janela extends JFrame {
         // Exibe a janela
         setVisible(true);
 
+
+
+
+        //configuracao inicial do programa
         int CapacidadeCesto = Integer.parseInt(JOptionPane.showInputDialog(null, "Digite a capacidade do cesto (Ex. 10)", "Qual a capacidade do Cesto?",  JOptionPane.QUESTION_MESSAGE));
         BrincadeiraDeCriancas.definirSemaforoCesto(CapacidadeCesto);
         
@@ -283,7 +202,7 @@ public class Janela extends JFrame {
         
         int QuantidadeInicial = Integer.parseInt(JOptionPane.showInputDialog(null, "Digite a quantidade inicial de Crianças (Ex. 3)", "Qual a quantidade inicial de Crianças?",  JOptionPane.QUESTION_MESSAGE));
         if(QuantidadeInicial != 0){
-            String QuaisComBola = JOptionPane.showInputDialog(null, "Quais crianças começam com bola?","Digite quais crianças começam com bola, separadas por virgula: (Ex. 1,3)",  JOptionPane.QUESTION_MESSAGE);
+            String QuaisComBola = JOptionPane.showInputDialog(null,"Digite quais crianças começam com bola, separadas por virgula: (Ex. 1,3)", "Quais crianças começam com bola?",  JOptionPane.QUESTION_MESSAGE);
         if(QuaisComBola != "0"){
         int[] intComecaComBola = separarVirgula(QuaisComBola);        
         String TempoCriancaBrincando = JOptionPane.showInputDialog(null, "Digite qual tempo de cada criança brincando, separadas por virgula: (Ex. 5,7,4)", "Qual tempo de cada criança brincando?",  JOptionPane.QUESTION_MESSAGE);
@@ -295,10 +214,7 @@ public class Janela extends JFrame {
         int[] intTempoBrincando = separarVirgula(TempoCriancaBrincando);        
         int[] intTempoOutraAtividade = separarVirgula(TempoCriancaOutraAtv);
 
-        // System.out.println(intComecaComBola[0]);
-        // System.out.println(intComecaComBola[1]);
-        // System.out.println(intComecaComBola[2]);
-
+        
         for(Integer i = 0; i < QuantidadeInicial; i++){
             boolean boolComecaComBola = false;
             String id = Integer.toString(i+1);
@@ -308,7 +224,7 @@ public class Janela extends JFrame {
                     break;
                 }
             }
-            //System.out.println("Janela:" + id + boolComecaComBola + intTempoBrincando[i] + intTempoOutraAtividade[i]);
+            
             BrincadeiraDeCriancas.adicionarCrianca(id,boolComecaComBola,intTempoBrincando[i],intTempoOutraAtividade[i]);
 
 
@@ -319,12 +235,6 @@ public class Janela extends JFrame {
 
     
 
-    public void AdicionarPainelCrianca(){
-        Janela.campoLogs.append("DEBUG");
-        
-
-    }
-    
   
 
 
